@@ -4,9 +4,17 @@ class AgendaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Agenda')),
-      body: Center(
-        child: Text('Página da Agenda'),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                'Página da Agenda',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
