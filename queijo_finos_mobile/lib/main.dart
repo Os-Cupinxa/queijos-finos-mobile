@@ -69,11 +69,11 @@ class AuthenticatedLayout extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0D2434),
         title: const Text(
-          'Queijos Finos',
+          'QUEIJOS FINOS',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Bellefair',
-            fontSize: 32.0,
+            fontSize: 24.0,
           ),
         ),
         centerTitle: true,
