@@ -62,6 +62,7 @@ class _AgendaPageState extends State<AgendaPage> {
         children: [
           Container(
             decoration: const BoxDecoration(
+              color: Colors.white,
               border: Border(
                 bottom: BorderSide(
                   color: Color(0xFFE0E0E0),
@@ -82,84 +83,90 @@ class _AgendaPageState extends State<AgendaPage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _filteredItems().length,
-              itemBuilder: (context, index) {
-                final item = _filteredItems()[index];
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFFF6F3F1),
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _filteredItems().length,
+                itemBuilder: (context, index) {
+                  final item = _filteredItems()[index];
 
-                return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Color(0xFFE0E0E0),
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 16.0),
-                            children: [
-                              TextSpan(
-                                text: item.nome,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: ' possui um ',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: item.tipo == 'contrato'
-                                    ? 'contrato de '
-                                    : 'visita agendada para o dia ',
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: item.descricao,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              if (item.tipo == 'contrato')
-                                const TextSpan(
-                                  text: ' para vencer dia ',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              TextSpan(
-                                text: item.data,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: '.',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFE0E0E0),
+                          width: 1.0,
                         ),
                       ),
-                      subtitle: Text(
-                        item.data,
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 14.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16.0),
+                              children: [
+                                TextSpan(
+                                  text: item.nome,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const TextSpan(
+                                  text: ' possui um ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: item.tipo == 'contrato'
+                                      ? 'contrato de '
+                                      : 'visita agendada para o dia ',
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: item.descricao,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                if (item.tipo == 'contrato')
+                                  const TextSpan(
+                                    text: ' para vencer dia ',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                TextSpan(
+                                  text: item.data,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const TextSpan(
+                                  text: '.',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        subtitle: Text(
+                          item.data,
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: 14.0),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ],
