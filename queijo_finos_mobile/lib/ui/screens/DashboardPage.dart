@@ -4,17 +4,16 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dashboard')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Bem-vindo ao Dashboard!'),
+            const Text('Bem-vindo ao Dashboard!'),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/agenda');
               },
-              child: Text('Ir para Agenda'),
+              child: const Text('Ir para Agenda'),
             ),
             ElevatedButton(
               onPressed: () {
