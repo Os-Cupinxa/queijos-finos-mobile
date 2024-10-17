@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       initialRoute: '/login',
       onGenerateRoute: (settings) {
-        if ((settings.name == '/dashboard' || 
-             settings.name == '/agenda' || 
-             settings.name == '/produtores') && 
+        if ((settings.name == '/dashboard' ||
+                settings.name == '/agenda' ||
+                settings.name == '/produtores') &&
             !isAuthenticated) {
           // Redirecionar para Login se não estiver autenticado
           return createRoute(LoginPage());
