@@ -282,7 +282,7 @@ class _DashboardPageState extends State<DashboardPage> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF9D8E61) : const Color(0xFFF5F4F6),
-          borderRadius: isSelected
+          borderRadius: "Semanal" == label
               ? const BorderRadius.horizontal(left: Radius.circular(20))
               : const BorderRadius.horizontal(right: Radius.circular(20)),
         ),

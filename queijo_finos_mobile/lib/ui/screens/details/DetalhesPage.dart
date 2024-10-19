@@ -68,7 +68,7 @@ class DetalhesPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            Text(item.status == Status.PRODUZINDO ? 'Produzindo' : 'Parado',
+            Text(item.status == 1 ? 'Produzindo' : 'Parado',
                 style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 16),
             const Text("Contratos Ativos:",

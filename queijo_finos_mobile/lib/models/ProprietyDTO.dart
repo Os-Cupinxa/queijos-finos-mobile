@@ -5,7 +5,7 @@ class ProprietyDTO {
   final String onwer;
   final String city;
   final String state;
-  final Status status;
+  final int status;
   final String latitude;
   final String longitude;
   final List<ActiveContracts> contractsActive;
@@ -22,4 +22,3 @@ class ProprietyDTO {
   });
 }
 
-enum Status { PRODUZINDO, PARADO }
