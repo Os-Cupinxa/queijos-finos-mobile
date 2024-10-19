@@ -2,8 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class DataPoint {
-  final List<int> curData;
-  final List<int> pastData;
+  final List<double> curData;
+  final List<double> pastData;
   final List<String> time;
 
   DataPoint({
