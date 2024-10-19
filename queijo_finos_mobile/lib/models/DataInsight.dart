@@ -1,7 +1,7 @@
 class DataInsight {
-  double active;
-  double activeInContemplation;
-  double dropout;
+  int active;
+  int activeInContemplation;
+  int dropout;
 
   DataInsight({
     required this.active,
@@ -11,7 +11,7 @@ class DataInsight {
 
   // Método para calcular a porcentagem
   Map<String, double> calculatePercentages() {
-    double total = active + activeInContemplation + dropout;
+    int total = active + activeInContemplation + dropout;
     return {
       'active': (active / total) * 100,
       'activeInContemplation': (activeInContemplation / total) * 100,
