@@ -94,7 +94,7 @@ class DetalhesPage extends StatelessWidget {
                                   style:
                                       TextStyle(fontWeight: FontWeight.normal)),
                               TextSpan(
-                                  text: '${contract.tecnologia}',
+                                  text: contract.tecnologia,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -111,7 +111,7 @@ class DetalhesPage extends StatelessWidget {
                                 style:
                                     TextStyle(fontWeight: FontWeight.normal)),
                             TextSpan(
-                                text: '${dateFormatted(contract.dataInicio)}',
+                                text: dateFormatted(contract.dataInicio),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                             const TextSpan(
@@ -120,7 +120,7 @@ class DetalhesPage extends StatelessWidget {
                                 style:
                                     TextStyle(fontWeight: FontWeight.normal)),
                             TextSpan(
-                                text: '${dateFormatted(contract.dataFim)}',
+                                text: dateFormatted(contract.dataFim),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                           ],

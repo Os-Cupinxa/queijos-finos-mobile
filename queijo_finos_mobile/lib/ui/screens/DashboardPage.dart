@@ -28,16 +28,20 @@ class _DashboardPageState extends State<DashboardPage> {
   // Função para buscar dados da API
   Future<void> fetchData() async {
     try {
-      // Buscar dados dos insights
-      final insightResponse =
-          await http.get(Uri.parse('http://10.0.2.2:8080/dataInsight'));
-      final weeklyResponse =
-          await http.get(Uri.parse('http://10.0.2.2:8080/dataPoint'));
-      final monthlyResponse =
-          await http.get(Uri.parse('http://10.0.2.2:8080/dataPointYear'));
+      final futures = [
+        http.get(Uri.parse('http://10.0.2.2:8080/dataInsight')),
+        http.get(Uri.parse('http://10.0.2.2:8080/dataPoint')),
+        http.get(Uri.parse('http://10.0.2.2:8080/dataPointYear')),
+      ];
 
-      print(
-          "Status code: ${insightResponse.statusCode} - ${weeklyResponse.statusCode} - ${monthlyResponse.statusCode}");
+      // Aguarda a conclusão de todas as requisições
+      final responses = await Future.wait(futures);
+
+      // Agora você pode acessar cada resposta pela lista `responses`
+      final insightResponse = responses[0];
+      final weeklyResponse = responses[1];
+      final monthlyResponse = responses[2];
+
       if (insightResponse.statusCode == 200 &&
           weeklyResponse.statusCode == 200 &&
           monthlyResponse.statusCode == 200) {
@@ -71,9 +75,8 @@ class _DashboardPageState extends State<DashboardPage> {
         throw Exception("Erro ao buscar os dados.");
       }
     } catch (e) {
-      print("Erro: $e");
       setState(() {
-        isLoading = false; // Mesmo em caso de erro, pare o loading
+        isLoading = false;
       });
     }
   }
@@ -102,7 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? Center(
+          ? const Center(
               child:
                   CircularProgressIndicator()) // Exibir um loading enquanto os dados são buscados
           : Center(
@@ -117,9 +120,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Quantidade de produção (p/U)',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22.0,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
@@ -166,7 +169,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Transform.translate(
-                      offset: Offset(0, -30),
+                      offset: const Offset(0, -30),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
@@ -199,17 +202,17 @@ class _DashboardPageState extends State<DashboardPage> {
                                 children: [
                                   buildInsightRow(
                                       "Ativos",
-                                      insightData.active as int,
+                                      insightData.active,
                                       insightData
                                           .calculatePercentages()['active']!),
                                   buildInsightRow(
                                       "Ativos em contemplação",
-                                      insightData.activeInContemplation as int,
+                                      insightData.activeInContemplation,
                                       insightData.calculatePercentages()[
                                           'activeInContemplation']!),
                                   buildInsightRow(
                                       "Desistentes",
-                                      insightData.dropout as int,
+                                      insightData.dropout,
                                       insightData
                                           .calculatePercentages()['dropout']!),
                                 ],
@@ -240,7 +243,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Text("20/08/2024",
+            Text(getFormattedDate(),
                 style: const TextStyle(
                   fontSize: 12.0,
                   color: Colors.grey,

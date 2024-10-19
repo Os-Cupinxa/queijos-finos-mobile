@@ -11,7 +11,7 @@ class ProdutoresPage extends StatefulWidget {
 }
 
 class _ProdutoresPageState extends State<ProdutoresPage> {
-  List<ProprietyDTO> _proprieties = [];
+  final List<ProprietyDTO> _proprieties = [];
   int _currentPage = 0;
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
@@ -147,7 +147,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                             children: [
                               Text(
                                 item.name.length > 10
-                                    ? item.name.substring(0, 10) + '...'
+                                    ? "${item.name.substring(0, 10)}.."
                                     : item.name,
                                 style: const TextStyle(
                                   fontSize: 22.0,
@@ -156,7 +156,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                               ),
                               Row(
                                 children: [
-                                  Text(item.city + ' - ' + item.state,
+                                  Text("${item.city} - ${item.state}",
                                       style: const TextStyle(
                                           fontSize: 16.0,
                                           color: Color(0xFF8C8C8C))),
@@ -189,7 +189,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                                       item.status == 1
                                           ? Icons.play_arrow
                                           : Icons.pause,
-                                      color: Color(0xFF8C8C8C)),
+                                      color: const Color(0xFF8C8C8C)),
                                   const SizedBox(width: 8),
                                   Text(
                                     item.status == 1 ? 'Produzindo' : 'Parado',
