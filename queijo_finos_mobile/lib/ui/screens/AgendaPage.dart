@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-// Classe que representa cada item da agenda (contrato ou visita)
-class AgendaItem {
-  final String nome;
-  final String descricao;
-  final String data;
-  final String tipo; // 'contrato' ou 'visita'
+import 'package:queijo_finos_mobile/models/AgendaItem.dart';
 
-  AgendaItem({
-    required this.nome,
-    required this.descricao,
-    required this.data,
-    required this.tipo,
-  });
-}
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
@@ -23,34 +13,48 @@ class AgendaPage extends StatefulWidget {
 }
 
 class _AgendaPageState extends State<AgendaPage> {
-  final List<AgendaItem> agendaItems = [
-    AgendaItem(
-      nome: 'Claudio Arruda',
-      descricao: 'Tecnologia Gorgonzola',
-      data: '11/09/2024',
-      tipo: 'contrato',
-    ),
-    AgendaItem(
-      nome: 'Pedro Roberto Ferreira',
-      descricao: '',
-      data: '05/09/2024',
-      tipo: 'visita',
-    ),
-    AgendaItem(
-      nome: 'Izaura Nunes de Visconde',
-      descricao: 'Tecnologia Gorgonzola',
-      data: '11/09/2024',
-      tipo: 'contrato',
-    ),
-  ];
-
+  List<AgendaItem> agendaItems = [];
   String selectedFilter = 'todos';
+  bool isLoading = true;
+
+  // Método para buscar os dados da API
+  Future<void> fetchAgendaItems() async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://10.0.2.2:8080/agendaAndExpiringContracts'));
+
+      if (response.statusCode == 200) {
+        // Parseando o JSON para uma lista de objetos AgendaItem
+        List<dynamic> data = json.decode(response.body);
+        List<AgendaItem> fetchedItems =
+            data.map((item) => AgendaItem.fromJson(item)).toList();
+
+        setState(() {
+          agendaItems = fetchedItems;
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Falha ao carregar dados da agenda');
+      }
+    } catch (e) {
+      print('Erro: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAgendaItems(); // Chama o método ao inicializar a página
+  }
 
   List<AgendaItem> _filteredItems() {
     if (selectedFilter == 'contratos') {
-      return agendaItems.where((item) => item.tipo == 'contrato').toList();
+      return agendaItems.where((item) => item.tipo == 'Contrato').toList();
     } else if (selectedFilter == 'visitas') {
-      return agendaItems.where((item) => item.tipo == 'visita').toList();
+      return agendaItems.where((item) => item.tipo == 'Visita').toList();
     }
     return agendaItems;
   }
@@ -58,119 +62,124 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(
-                  color: Color(0xFFE0E0E0),
-                  width: 1.0,
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildFilterButton('Todos', 'todos'),
-                  _buildFilterButton('Visitas', 'visitas'),
-                  _buildFilterButton('Contratos', 'contratos'),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF6F3F1),
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _filteredItems().length,
-                itemBuilder: (context, index) {
-                  final item = _filteredItems()[index];
-
-                  return Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color(0xFFE0E0E0),
-                          width: 1.0,
-                        ),
+      body: isLoading
+          ? const Center(
+              child:
+                  CircularProgressIndicator()) // Exibe um loading enquanto carrega
+          : Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Color(0xFFE0E0E0),
+                        width: 1.0,
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
-                              children: [
-                                TextSpan(
-                                  text: item.nome,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const TextSpan(
-                                  text: ' possui um ',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                TextSpan(
-                                  text: item.tipo == 'contrato'
-                                      ? 'contrato de '
-                                      : 'visita agendada para o dia ',
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                TextSpan(
-                                  text: item.descricao,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                if (item.tipo == 'contrato')
-                                  const TextSpan(
-                                    text: ' para vencer dia ',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                TextSpan(
-                                  text: item.data,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const TextSpan(
-                                  text: '.',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildFilterButton('Todos', 'todos'),
+                        _buildFilterButton('Visitas', 'visitas'),
+                        _buildFilterButton('Contratos', 'contratos'),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF6F3F1),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _filteredItems().length,
+                      itemBuilder: (context, index) {
+                        final item = _filteredItems()[index];
+
+                        return Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xFFE0E0E0),
+                                width: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        subtitle: Text(
-                          item.data,
-                          style: const TextStyle(
-                              color: Colors.grey, fontSize: 14.0),
-                        ),
-                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.only(bottom: 4.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 16.0),
+                                    children: [
+                                      TextSpan(
+                                        text: item.nome,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: ' possui uma ',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: item.tipo == 'Contrato'
+                                            ? 'contrato de '
+                                            : 'visita agendada para o dia ',
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: item.descricao,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      if (item.tipo == 'Contrato')
+                                        const TextSpan(
+                                          text: ' para vencer dia ',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      TextSpan(
+                                        text: item.data,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: '.',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              subtitle: Text(
+                                item.data,
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 14.0),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
