@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,14 +12,51 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _senhaController = TextEditingController();
 
   Future<void> _login() async {
-    String login = _loginController.text;
+    String email = _loginController.text;
     String senha = _senhaController.text;
 
-    if (login.isNotEmpty && senha.isNotEmpty) {
-      Navigator.pushReplacementNamed(context, '/dashboard');
+    if (email.isNotEmpty && senha.isNotEmpty) {
+      try {
+        var response = await http.post(
+          Uri.parse('http://10.0.2.2:8080/login'),
+          body: {
+            'email': email,
+            'senha': senha,
+          },
+        );
+
+        var responseData = jsonDecode(response.body);
+        if (response.statusCode == 200 && responseData['status'] == 'success') {
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        } else {
+          _showErrorDialog(responseData['message'] ?? 'Erro de autenticação');
+        }
+      } catch (e) {
+        _showErrorDialog('Erro de conexão. Tente novamente mais tarde.');
+      }
     } else {
-      print('Preencha os campos de login e senha.');
+      _showErrorDialog('Preencha os campos de login e senha.');
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Erro'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -26,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            // Envolvendo o conteúdo em um SingleChildScrollView
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -37,18 +75,16 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.all(
-                            16.0), // Adicionando padding para garantir espaço
+                        padding: EdgeInsets.all(16.0),
                         child: Text(
                           "Queijos Finos",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize:
-                                40.0, // Diminuindo o tamanho do texto para caber na tela
+                            fontSize: 40.0,
                             color: Color(0xFF9D8E61),
                             fontFamily: 'Bellefair',
                           ),
-                          textAlign: TextAlign.center, // Centralizando o texto
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Image.asset(
@@ -59,8 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(
-                      16.0), // Adicionando padding ao redor do texto
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     'Login',
                     style:
@@ -122,9 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 70,
-                              vertical:
-                                  12), // Garantir que o botão tenha espaçamento correto
+                              horizontal: 70, vertical: 12),
                           backgroundColor: const Color(0xFF0D2434),
                         ),
                         onPressed: _login,
