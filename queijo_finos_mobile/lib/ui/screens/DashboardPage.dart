@@ -4,9 +4,11 @@ import 'package:http/http.dart'
 import 'dart:convert'; // Para decodificar JSON
 import 'package:queijo_finos_mobile/models/DataInsight.dart';
 import 'package:queijo_finos_mobile/ui/components/charts/LineChartSample2.dart';
-import 'package:intl/intl.dart'; // Importado para formatar datas, caso necessário
+// Importado para formatar datas, caso necessário
 
 class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
+
   @override
   _DashboardPageState createState() => _DashboardPageState();
 }
@@ -72,7 +74,7 @@ class _DashboardPageState extends State<DashboardPage> {
           isLoading = false; // Dados carregados
         });
       } else {
-        throw Exception("Erro ao buscar os dados.");
+        throw Exception('Erro ao buscar os dados.');
       }
     } catch (e) {
       setState(() {
@@ -121,7 +123,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Quantidade de produção (p/U)',
+                            'Quantidade de produção (p/L)',
                             style: TextStyle(
                               fontSize: 22.0,
                               fontWeight: FontWeight.w500,
@@ -142,13 +144,13 @@ class _DashboardPageState extends State<DashboardPage> {
                               Row(
                                 children: [
                                   _buildToggleButton(
-                                    label: "Semanal",
+                                    label: 'Semanal',
                                     isSelected: isWeekly,
                                     onTap: () =>
                                         setState(() => isWeekly = true),
                                   ),
                                   _buildToggleButton(
-                                    label: "Mensal",
+                                    label: 'Mensal',
                                     isSelected: !isWeekly,
                                     onTap: () =>
                                         setState(() => isWeekly = false),
@@ -181,7 +183,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "Insights",
+                              'Insights',
                               style: TextStyle(
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w500,
@@ -189,7 +191,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                             const SizedBox(height: 16.0),
                             const Text(
-                              "Quantidade de propriedades por status",
+                              'Quantidade de propriedades por status',
                               style: TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w800,
@@ -201,17 +203,17 @@ class _DashboardPageState extends State<DashboardPage> {
                               child: Column(
                                 children: [
                                   buildInsightRow(
-                                      "Ativos",
+                                      'Ativos',
                                       insightData.active,
                                       insightData
                                           .calculatePercentages()['active']!),
                                   buildInsightRow(
-                                      "Ativos em contemplação",
+                                      'Ativos em contemplação',
                                       insightData.activeInContemplation,
                                       insightData.calculatePercentages()[
                                           'activeInContemplation']!),
                                   buildInsightRow(
-                                      "Desistentes",
+                                      'Desistentes',
                                       insightData.dropout,
                                       insightData
                                           .calculatePercentages()['dropout']!),
@@ -254,14 +256,14 @@ class _DashboardPageState extends State<DashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "$value", // Usando dados da API
+              '$value', // Usando dados da API
               style: const TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Text(
-              "${percentage.toStringAsFixed(1)}%", // Porcentagem
+              '${percentage.toStringAsFixed(1)}%', // Porcentagem
               style: const TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey,
@@ -285,7 +287,7 @@ class _DashboardPageState extends State<DashboardPage> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF9D8E61) : const Color(0xFFF5F4F6),
-          borderRadius: "Semanal" == label
+          borderRadius: 'Semanal' == label
               ? const BorderRadius.horizontal(left: Radius.circular(20))
               : const BorderRadius.horizontal(right: Radius.circular(20)),
         ),

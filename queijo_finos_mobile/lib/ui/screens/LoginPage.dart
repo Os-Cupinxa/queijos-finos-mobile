@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -14,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     String email = _loginController.text;
     String senha = _senhaController.text;
-
     if (email.isNotEmpty && senha.isNotEmpty) {
       try {
         var response = await http.post(
@@ -24,18 +26,25 @@ class _LoginPageState extends State<LoginPage> {
             'senha': senha,
           },
         );
-
+        if (!mounted) return;
         var responseData = jsonDecode(response.body);
         if (response.statusCode == 200 && responseData['status'] == 'success') {
+          int userId = responseData['userId'];
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('userId', userId);
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
           _showErrorDialog(responseData['message'] ?? 'Erro de autenticação');
         }
       } catch (e) {
-        _showErrorDialog('Erro de conexão. Tente novamente mais tarde.');
+        if (mounted) {
+          _showErrorDialog('Erro de conexão. Tente novamente mais tarde.');
+        }
       }
     } else {
-      _showErrorDialog('Preencha os campos de login e senha.');
+      if (mounted) {
+        _showErrorDialog('Preencha os campos de login e senha.');
+      }
     }
   }
 
@@ -44,14 +53,14 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Erro'),
+          title: const Text('Erro'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -77,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text(
-                          "Queijos Finos",
+                          'Queijos Finos',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 40.0,

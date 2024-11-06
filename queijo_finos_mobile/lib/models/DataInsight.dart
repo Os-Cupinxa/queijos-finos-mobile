@@ -1,13 +1,13 @@
 class DataInsight {
-  int active;
-  int activeInContemplation;
-  int dropout;
 
   DataInsight({
     required this.active,
     required this.activeInContemplation,
     required this.dropout,
   });
+  int active;
+  int activeInContemplation;
+  int dropout;
 
   // Método para calcular a porcentagem
   Map<String, double> calculatePercentages() {

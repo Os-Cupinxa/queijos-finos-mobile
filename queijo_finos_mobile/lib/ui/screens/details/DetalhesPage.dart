@@ -3,9 +3,9 @@ import 'package:url_launcher/url_launcher.dart'; // Importa o pacote
 import '../../../models/ProprietyDTO.dart';
 
 class DetalhesPage extends StatelessWidget {
-  final ProprietyDTO item;
 
   const DetalhesPage({Key? key, required this.item}) : super(key: key);
+  final ProprietyDTO item;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class DetalhesPage extends StatelessWidget {
             Text(item.status == 1 ? 'Produzindo' : 'Parado',
                 style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 16),
-            const Text("Contratos Ativos:",
+            const Text('Contratos Ativos:',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             const SizedBox(height: 16),
             Expanded(

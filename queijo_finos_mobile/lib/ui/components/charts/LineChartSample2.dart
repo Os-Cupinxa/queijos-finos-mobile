@@ -2,21 +2,21 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class DataPoint {
-  final List<double> curData;
-  final List<double> pastData;
-  final List<String> time;
 
   DataPoint({
     required this.curData,
     required this.pastData,
     required this.time,
   });
+  final List<double> curData;
+  final List<double> pastData;
+  final List<String> time;
 }
 
 class LineChartSample2 extends StatefulWidget {
-  final DataPoint dataPoint;
 
   const LineChartSample2({super.key, required this.dataPoint});
+  final DataPoint dataPoint;
 
   @override
   State<LineChartSample2> createState() => _LineChartSample2State();
@@ -73,7 +73,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
     } else {
       return SideTitleWidget(
         axisSide: meta.axisSide,
-        child: const Text(''), // Retorna um widget vazio se o índice for inválido
+        child:
+            const Text(''), // Retorna um widget vazio se o índice for inválido
       );
     }
   }
