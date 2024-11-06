@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -186,7 +187,16 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Column(
                         children: [
-                          Image.asset('assets/images/logoBPK.png'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/images/logoBPK.png'),
+                              SvgPicture.asset(
+                                'assets/images/logoBioparkeducacao.svg',
+                                width: 120,
+                              ),
+                            ],
+                          ),
                           const Text(
                             '© Copyright 2024',
                             style:

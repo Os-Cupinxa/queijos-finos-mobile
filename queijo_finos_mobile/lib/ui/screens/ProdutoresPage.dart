@@ -52,18 +52,10 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
 
   Future<List<ProprietyDTO>> fetchProprieties(
       {int page = 0, String nameProducer = ""}) async {
-    var response;
-    if (nameProducer.isEmpty) {
-      response = await http.get(
-        Uri.parse(
-            'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
-      );
-    } else {
-      response = await http.get(
-        Uri.parse(
-            'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
-      );
-    }
+    var response = await http.get(
+      Uri.parse(
+          'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
+    );
     if (response.statusCode == 200) {
       final data = json.decode(utf8.decode(response.bodyBytes));
       return (data['content'] as List)
