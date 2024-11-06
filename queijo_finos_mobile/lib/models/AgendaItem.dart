@@ -1,8 +1,4 @@
-class AgendaItem {
-  final String nome;
-  final String descricao;
-  final String data;
-  final String tipo; // 'contrato' ou 'visita'
+class AgendaItem { // 'contrato' ou 'visita'
 
   AgendaItem({
     required this.nome,
@@ -20,4 +16,8 @@ class AgendaItem {
       tipo: json['tipo'] as String,
     );
   }
+  final String nome;
+  final String descricao;
+  final String data;
+  final String tipo;
 }

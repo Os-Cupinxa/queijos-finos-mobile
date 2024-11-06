@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProdutoresPage extends StatefulWidget {
+  const ProdutoresPage({super.key});
+
   @override
   _ProdutoresPageState createState() => _ProdutoresPageState();
 }
@@ -16,13 +18,13 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  String _currentSearchQuery = "";
 
   @override
   void initState() {
     super.initState();
     _loadMoreData();
 
-    // Listener to detect when user scrolls to bottom
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
               _scrollController.position.maxScrollExtent &&
@@ -32,32 +34,39 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
     });
   }
 
-  Future<void> _loadMoreData() async {
+  Future<void> _loadMoreData({String nameProducer = ""}) async {
     setState(() {
       _isLoading = true;
     });
 
-    // Fetch next page from backend
-    final nextPage = _currentPage + 1;
+    // Usa _currentPage diretamente
     final List<ProprietyDTO> newProprieties =
-        await fetchProprieties(page: nextPage);
+        await fetchProprieties(page: _currentPage, nameProducer: nameProducer);
 
     setState(() {
-      _currentPage = nextPage;
       _proprieties.addAll(newProprieties);
       _isLoading = false;
+      _currentPage += 1;
     });
   }
 
-  Future<List<ProprietyDTO>> fetchProprieties({int page = 0}) async {
-    // Adapte essa parte para o seu fetch HTTP real.
-    // Exemplo simplificado para buscar produtores da API com paginação:
-    final response = await http
-        .get(Uri.parse('http://10.0.2.2:8080/propriedadesDTO?page=$page'));
-
+  Future<List<ProprietyDTO>> fetchProprieties(
+      {int page = 0, String nameProducer = ""}) async {
+    var response;
+    print(page);
+    if (nameProducer.isEmpty) {
+      response = await http.get(
+        Uri.parse(
+            'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
+      );
+    } else {
+      response = await http.get(
+        Uri.parse(
+            'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
+      );
+    }
     if (response.statusCode == 200) {
-      // Parse the JSON response and map it to ProprietyDTO objects
-      final data = json.decode(response.body);
+      final data = json.decode(utf8.decode(response.bodyBytes));
       return (data['content'] as List)
           .map((json) => ProprietyDTO(
                 name: json['name'],
@@ -81,6 +90,15 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
     }
   }
 
+  void _searchProducers() {
+    setState(() {
+      _currentPage = 0;
+      _proprieties.clear();
+      _currentSearchQuery = _searchController.text;
+    });
+    _loadMoreData(nameProducer: _currentSearchQuery);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,15 +115,14 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                 contentPadding: EdgeInsets.all(16.0),
               ),
               onSubmitted: (value) {
-                // Implemente a lógica de pesquisa
+                _searchProducers();
               },
             ),
           ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: _proprieties.length +
-                  1, // Adiciona 1 para o indicador de carregamento
+              itemCount: _proprieties.length + 1,
               itemBuilder: (context, index) {
                 if (index == _proprieties.length) {
                   return _isLoading
@@ -113,8 +130,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                           padding: EdgeInsets.all(8.0),
                           child: Center(child: CircularProgressIndicator()),
                         )
-                      : const SizedBox
-                          .shrink(); // Não mostra nada se não estiver carregando mais
+                      : const SizedBox.shrink();
                 }
 
                 final item = _proprieties[index];
@@ -147,7 +163,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                             children: [
                               Text(
                                 item.name.length > 10
-                                    ? "${item.name.substring(0, 10)}.."
+                                    ? '${item.name.substring(0, 10)}..'
                                     : item.name,
                                 style: const TextStyle(
                                   fontSize: 22.0,
@@ -156,15 +172,13 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                               ),
                               Row(
                                 children: [
-                                  Text("${item.city} - ${item.state}",
+                                  Text('${item.city} - ${item.state}',
                                       style: const TextStyle(
                                           fontSize: 16.0,
                                           color: Color(0xFF8C8C8C))),
                                   const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.location_on,
-                                    color: Color(0xFF8C8C8C),
-                                  ),
+                                  const Icon(Icons.location_on,
+                                      color: Color(0xFF8C8C8C)),
                                 ],
                               ),
                             ],
@@ -202,9 +216,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                               OutlinedButton.icon(
                                 style: OutlinedButton.styleFrom(
                                     side: const BorderSide(
-                                  color: Color(0xFF79747E),
-                                  width: 2.0,
-                                )),
+                                        color: Color(0xFF79747E), width: 2.0)),
                                 icon: const Icon(Icons.arrow_right_outlined,
                                     color: Color(0xFF79747E), size: 24.0),
                                 onPressed: () {

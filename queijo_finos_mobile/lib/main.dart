@@ -9,7 +9,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  bool isAuthenticated = true; // Simulação de autenticação
+  MyApp({super.key});
+
+  bool isAuthenticated = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +24,26 @@ class MyApp extends StatelessWidget {
                 settings.name == '/produtores') &&
             !isAuthenticated) {
           // Redirecionar para Login se não estiver autenticado
-          return createRoute(LoginPage());
+          return createRoute(const LoginPage());
         }
 
         switch (settings.name) {
           case '/login':
-            return createRoute(LoginPage());
+            return createRoute(const LoginPage());
           case '/agenda':
-            return createRoute(AuthenticatedLayout(
+            return createRoute(const AuthenticatedLayout(
               selectedIndex: 1,
             ));
           case '/produtores':
-            return createRoute(AuthenticatedLayout(
+            return createRoute(const AuthenticatedLayout(
               selectedIndex: 2,
             ));
           case '/dashboard':
-            return createRoute(AuthenticatedLayout(
+            return createRoute(const AuthenticatedLayout(
               selectedIndex: 0,
             ));
           default:
-            return createRoute(LoginPage());
+            return createRoute(const LoginPage());
         }
       },
     );
@@ -69,9 +71,8 @@ Route createRoute(Widget page) {
 }
 
 class AuthenticatedLayout extends StatefulWidget {
+  const AuthenticatedLayout({super.key, required this.selectedIndex});
   final int selectedIndex;
-
-  const AuthenticatedLayout({required this.selectedIndex});
 
   @override
   _AuthenticatedLayoutState createState() => _AuthenticatedLayoutState();
@@ -81,9 +82,9 @@ class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    DashboardPage(),
-    AgendaPage(),
-    ProdutoresPage(),
+    const DashboardPage(),
+    const AgendaPage(),
+    const ProdutoresPage(),
   ];
 
   @override

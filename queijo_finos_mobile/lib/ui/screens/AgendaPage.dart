@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:queijo_finos_mobile/models/AgendaItem.dart';
-
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
 
   @override
   _AgendaPageState createState() => _AgendaPageState();
+}
+
+Future<int?> getUserId() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('userId');
 }
 
 class _AgendaPageState extends State<AgendaPage> {
@@ -20,12 +24,14 @@ class _AgendaPageState extends State<AgendaPage> {
   // Método para buscar os dados da API
   Future<void> fetchAgendaItems() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://10.0.2.2:8080/agendaAndExpiringContracts'));
+      final response = await http.get(Uri.parse(
+          'http://10.0.2.2:8080/agendaAndExpiringContracts?userId=${await getUserId()}'));
 
       if (response.statusCode == 200) {
+        // Decodifica o corpo da resposta usando UTF-8
+        String responseBody = utf8.decode(response.bodyBytes);
         // Parseando o JSON para uma lista de objetos AgendaItem
-        List<dynamic> data = json.decode(response.body);
+        List<dynamic> data = json.decode(responseBody);
         List<AgendaItem> fetchedItems =
             data.map((item) => AgendaItem.fromJson(item)).toList();
 
@@ -139,13 +145,14 @@ class _AgendaPageState extends State<AgendaPage> {
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
-                                      TextSpan(
-                                        text: item.descricao,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                      if (item.tipo == 'Contrato')
+                                        TextSpan(
+                                          text: item.descricao,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                      ),
                                       if (item.tipo == 'Contrato')
                                         const TextSpan(
                                           text: ' para vencer dia ',

@@ -1,14 +1,6 @@
 import 'package:queijo_finos_mobile/models/ActiveContracts.dart';
 
 class ProprietyDTO {
-  final String name;
-  final String onwer;
-  final String city;
-  final String state;
-  final int status;
-  final String latitude;
-  final String longitude;
-  final List<ActiveContracts> contractsActive;
 
   ProprietyDTO({
     required this.name,
@@ -20,5 +12,12 @@ class ProprietyDTO {
     required this.latitude,
     required this.longitude,
   });
+  final String name;
+  final String onwer;
+  final String city;
+  final String state;
+  final int status;
+  final String latitude;
+  final String longitude;
+  final List<ActiveContracts> contractsActive;
 }
-
