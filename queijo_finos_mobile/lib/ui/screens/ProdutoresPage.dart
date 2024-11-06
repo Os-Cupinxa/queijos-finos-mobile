@@ -53,7 +53,6 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
   Future<List<ProprietyDTO>> fetchProprieties(
       {int page = 0, String nameProducer = ""}) async {
     var response;
-    print(page);
     if (nameProducer.isEmpty) {
       response = await http.get(
         Uri.parse(

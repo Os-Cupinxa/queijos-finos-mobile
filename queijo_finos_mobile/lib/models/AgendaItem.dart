@@ -1,5 +1,5 @@
-class AgendaItem { // 'contrato' ou 'visita'
-
+class AgendaItem {
+  
   AgendaItem({
     required this.nome,
     required this.descricao,
