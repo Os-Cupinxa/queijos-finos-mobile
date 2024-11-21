@@ -11,11 +11,6 @@ class AgendaPage extends StatefulWidget {
   _AgendaPageState createState() => _AgendaPageState();
 }
 
-Future<int?> getUserId() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('userId');
-}
-
 class _AgendaPageState extends State<AgendaPage> {
   List<AgendaItem> agendaItems = [];
   String selectedFilter = 'todos';
@@ -24,8 +19,22 @@ class _AgendaPageState extends State<AgendaPage> {
   // Método para buscar os dados da API
   Future<void> fetchAgendaItems() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://10.0.2.2:8080/agendaAndExpiringContracts?userId=${await getUserId()}'));
+      final prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('Token não encontrado. Faça login novamente.');
+      }
+
+      // Headers com o token JWT
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.get(
+          Uri.parse('http://10.0.2.2:8080/agendaAndExpiringContracts'),
+          headers: headers);
 
       if (response.statusCode == 200) {
         // Decodifica o corpo da resposta usando UTF-8
