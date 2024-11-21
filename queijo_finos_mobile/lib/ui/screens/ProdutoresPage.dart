@@ -5,6 +5,8 @@ import 'package:queijo_finos_mobile/ui/screens/details/DetalhesPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class ProdutoresPage extends StatefulWidget {
   const ProdutoresPage({super.key});
 
@@ -52,9 +54,22 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
 
   Future<List<ProprietyDTO>> fetchProprieties(
       {int page = 0, String nameProducer = ""}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    if (token == null) {
+      throw Exception('Token não encontrado. Faça login novamente.');
+    }
+
+    // Headers com o token JWT
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     var response = await http.get(
       Uri.parse(
           'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
+      headers: headers,
     );
     if (response.statusCode == 200) {
       final data = json.decode(utf8.decode(response.bodyBytes));
