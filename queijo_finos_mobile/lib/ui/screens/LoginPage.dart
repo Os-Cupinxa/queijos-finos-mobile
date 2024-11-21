@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
           try {
             final prefs = await SharedPreferences.getInstance();
             await prefs.setString('token', tokenAcess);
+            print(prefs.getString('token'));
           } catch (e) {
             print('Erro ao acessar SharedPreferences: $e');
           }

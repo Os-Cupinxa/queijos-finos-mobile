@@ -4,6 +4,7 @@ import 'package:http/http.dart'
 import 'dart:convert'; // Para decodificar JSON
 import 'package:queijo_finos_mobile/models/DataInsight.dart';
 import 'package:queijo_finos_mobile/ui/components/charts/LineChartSample2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // Importado para formatar datas, caso necessário
 
 class DashboardPage extends StatefulWidget {
@@ -30,10 +31,26 @@ class _DashboardPageState extends State<DashboardPage> {
   // Função para buscar dados da API
   Future<void> fetchData() async {
     try {
+      // Recupera o token JWT do SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('Token não encontrado. Faça login novamente.');
+      }
+
+      // Headers com o token JWT
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
       final futures = [
-        http.get(Uri.parse('http://10.0.2.2:8080/dataInsight')),
-        http.get(Uri.parse('http://10.0.2.2:8080/dataPoint')),
-        http.get(Uri.parse('http://10.0.2.2:8080/dataPointYear')),
+        http.get(Uri.parse('http://10.0.2.2:8080/dataInsight'),
+            headers: headers),
+        http.get(Uri.parse('http://10.0.2.2:8080/dataPoint'), headers: headers),
+        http.get(Uri.parse('http://10.0.2.2:8080/dataPointYear'),
+            headers: headers),
       ];
 
       // Aguarda a conclusão de todas as requisições
@@ -80,6 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
       setState(() {
         isLoading = false;
       });
+      print('Erro ao buscar dados: $e'); // Para depuração
     }
   }
 
