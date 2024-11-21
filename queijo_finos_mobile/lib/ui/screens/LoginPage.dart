@@ -22,17 +22,26 @@ class _LoginPageState extends State<LoginPage> {
       try {
         var response = await http.post(
           Uri.parse('http://10.0.2.2:8080/login'),
-          body: {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({
             'email': email,
             'senha': senha,
-          },
+          }),
         );
         if (!mounted) return;
         var responseData = jsonDecode(response.body);
-        if (response.statusCode == 200 && responseData['status'] == 'success') {
-          int userId = responseData['userId'];
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setInt('userId', userId);
+
+        if (response.statusCode == 200) {
+          String tokenAcess = responseData['token'];
+          try {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('token', tokenAcess);
+          } catch (e) {
+            print('Erro ao acessar SharedPreferences: $e');
+          }
+
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
           _showErrorDialog(responseData['message'] ?? 'Erro de autenticação');
