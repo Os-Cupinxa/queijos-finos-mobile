@@ -36,12 +36,20 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
     });
   }
 
+  @override
+  void didUpdateWidget(covariant ProdutoresPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Recarregar os dados quando a página é reconstruída
+    _currentPage = 0;
+    _proprieties.clear();
+    _loadMoreData(nameProducer: _currentSearchQuery);
+  }
+
   Future<void> _loadMoreData({String nameProducer = ""}) async {
     setState(() {
       _isLoading = true;
     });
 
-    // Usa _currentPage diretamente
     final List<ProprietyDTO> newProprieties =
         await fetchProprieties(page: _currentPage, nameProducer: nameProducer);
 

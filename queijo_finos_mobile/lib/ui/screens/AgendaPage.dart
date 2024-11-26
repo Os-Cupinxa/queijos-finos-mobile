@@ -65,6 +65,13 @@ class _AgendaPageState extends State<AgendaPage> {
     fetchAgendaItems(); // Chama o método ao inicializar a página
   }
 
+  @override
+  void didUpdateWidget(covariant AgendaPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Recarregar os dados quando a página é reconstruída
+    fetchAgendaItems();
+  }
+
   List<AgendaItem> _filteredItems() {
     if (selectedFilter == 'contratos') {
       return agendaItems.where((item) => item.tipo == 'Contrato').toList();

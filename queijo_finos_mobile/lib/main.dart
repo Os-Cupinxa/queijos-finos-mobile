@@ -3,21 +3,41 @@ import 'package:queijo_finos_mobile/ui/screens/AgendaPage.dart';
 import 'package:queijo_finos_mobile/ui/screens/DashboardPage.dart';
 import 'package:queijo_finos_mobile/ui/screens/LoginPage.dart';
 import 'package:queijo_finos_mobile/ui/screens/ProdutoresPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({super.key});
 
-  bool isAuthenticated = true;
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isAuthenticated = false;
+
+  Future<void> checkAuthentication() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    setState(() {
+      isAuthenticated = token != null;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkAuthentication();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
-      initialRoute: '/login',
+      initialRoute: isAuthenticated ? '/dashboard' : '/login',
       onGenerateRoute: (settings) {
         if ((settings.name == '/dashboard' ||
                 settings.name == '/agenda' ||
@@ -81,12 +101,6 @@ class AuthenticatedLayout extends StatefulWidget {
 class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const DashboardPage(),
-    const AgendaPage(),
-    const ProdutoresPage(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -97,6 +111,19 @@ class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return const DashboardPage();
+      case 1:
+        return const AgendaPage();
+      case 2:
+        return const ProdutoresPage();
+      default:
+        return const DashboardPage();
+    }
   }
 
   @override
@@ -117,11 +144,18 @@ class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('token');
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+          ),
+        ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+      body: _getPage(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF0D2434),
         selectedItemColor: Colors.white,

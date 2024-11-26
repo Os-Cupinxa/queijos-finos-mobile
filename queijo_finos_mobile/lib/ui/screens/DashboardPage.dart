@@ -28,6 +28,13 @@ class _DashboardPageState extends State<DashboardPage> {
     fetchData(); // Buscar dados ao iniciar a página
   }
 
+  @override
+  void didUpdateWidget(covariant DashboardPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Recarregar os dados quando a página é reconstruída
+    fetchData();
+  }
+
   // Função para buscar dados da API
   Future<void> fetchData() async {
     try {
