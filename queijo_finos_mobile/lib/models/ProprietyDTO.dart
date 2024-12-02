@@ -1,4 +1,5 @@
 import 'package:queijo_finos_mobile/models/ActiveContracts.dart';
+import 'package:queijo_finos_mobile/models/Tecnology.dart';
 
 class ProprietyDTO {
 
@@ -9,6 +10,7 @@ class ProprietyDTO {
     required this.state,
     required this.status,
     required this.contractsActive,
+    required this.tecnologiasList,
     required this.latitude,
     required this.longitude,
   });
@@ -20,4 +22,5 @@ class ProprietyDTO {
   final String latitude;
   final String longitude;
   final List<ActiveContracts> contractsActive;
+  final List<Tecnology> tecnologiasList;
 }

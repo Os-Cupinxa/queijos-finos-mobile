@@ -3,7 +3,6 @@ import 'package:url_launcher/url_launcher.dart'; // Importa o pacote
 import '../../../models/ProprietyDTO.dart';
 
 class DetalhesPage extends StatelessWidget {
-
   const DetalhesPage({Key? key, required this.item}) : super(key: key);
   final ProprietyDTO item;
 
@@ -71,9 +70,21 @@ class DetalhesPage extends StatelessWidget {
             Text(item.status == 1 ? 'Produzindo' : 'Parado',
                 style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 16),
-            const Text('Contratos Ativos:',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 234, 234, 234),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text('Contratos Ativos:',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
                 itemCount: item.contractsActive.length,
@@ -126,12 +137,56 @@ class DetalhesPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const Divider(),
                     ],
                   );
                 },
               ),
             ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE0E0E0),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text('Tecnologias:',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+                child: ListView.builder(
+                    itemCount: item.tecnologiasList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                    fontSize: 18, color: Colors.black),
+                                children: [
+                                  const TextSpan(
+                                      text: 'Tecnologia ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal)),
+                                  TextSpan(
+                                      text: item.tecnologiasList[index].nome,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                        ],
+                      );
+                    }))
           ],
         ),
       ),

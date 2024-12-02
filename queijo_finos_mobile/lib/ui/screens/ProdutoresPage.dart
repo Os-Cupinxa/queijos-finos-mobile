@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:queijo_finos_mobile/models/ActiveContracts.dart';
 import 'package:queijo_finos_mobile/models/ProprietyDTO.dart';
+import 'package:queijo_finos_mobile/models/Tecnology.dart';
 import 'package:queijo_finos_mobile/ui/screens/details/DetalhesPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -90,6 +91,12 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
                 latitude: json['latitude'],
                 longitude: json['longitude'],
                 status: json['status'],
+                tecnologiasList: (json['tecnologiasList'] as List)
+                    .map((tecnologia) => Tecnology(
+                          nome: tecnologia['nome'],
+                          observacao: tecnologia['observacao'],
+                        ))
+                    .toList(),
                 contractsActive: (json['contractsActive'] as List)
                     .map((contract) => ActiveContracts(
                           tecnologia: contract['nome'],
