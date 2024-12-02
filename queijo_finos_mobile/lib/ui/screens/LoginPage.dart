@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     if (email.isNotEmpty && senha.isNotEmpty) {
       try {
         var response = await http.post(
-          Uri.parse('http://10.0.2.2:8080/login'),
+          Uri.parse('${dotenv.env['API_BASE_URL']}/login'),
           headers: {
             'Content-Type': 'application/json',
           },

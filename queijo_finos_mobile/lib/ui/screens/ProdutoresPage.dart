@@ -5,7 +5,7 @@ import 'package:queijo_finos_mobile/models/Tecnology.dart';
 import 'package:queijo_finos_mobile/ui/screens/details/DetalhesPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProdutoresPage extends StatefulWidget {
@@ -77,7 +77,7 @@ class _ProdutoresPageState extends State<ProdutoresPage> {
     };
     var response = await http.get(
       Uri.parse(
-          'http://10.0.2.2:8080/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
+          '${dotenv.env['API_BASE_URL']}/propriedadesDTO/producerName?nameProducer=$nameProducer&page=$page'),
       headers: headers,
     );
     if (response.statusCode == 200) {

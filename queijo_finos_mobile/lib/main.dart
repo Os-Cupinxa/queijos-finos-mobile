@@ -4,8 +4,15 @@ import 'package:queijo_finos_mobile/ui/screens/DashboardPage.dart';
 import 'package:queijo_finos_mobile/ui/screens/LoginPage.dart';
 import 'package:queijo_finos_mobile/ui/screens/ProdutoresPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print("Erro ao carregar o arquivo .env: $e");
+  }
   runApp(MyApp());
 }
 

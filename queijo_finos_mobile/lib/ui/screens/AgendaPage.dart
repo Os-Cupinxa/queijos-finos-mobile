@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:queijo_finos_mobile/models/AgendaItem.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
@@ -33,7 +34,7 @@ class _AgendaPageState extends State<AgendaPage> {
       };
 
       final response = await http.get(
-          Uri.parse('http://10.0.2.2:8080/agendaAndExpiringContracts'),
+          Uri.parse('${dotenv.env['API_BASE_URL']}/agendaAndExpiringContracts'),
           headers: headers);
 
       if (response.statusCode == 200) {

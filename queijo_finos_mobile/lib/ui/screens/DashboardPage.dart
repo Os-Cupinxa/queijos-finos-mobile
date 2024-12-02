@@ -5,7 +5,7 @@ import 'dart:convert'; // Para decodificar JSON
 import 'package:queijo_finos_mobile/models/DataInsight.dart';
 import 'package:queijo_finos_mobile/ui/components/charts/LineChartSample2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// Importado para formatar datas, caso necessário
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -53,10 +53,10 @@ class _DashboardPageState extends State<DashboardPage> {
       };
 
       final futures = [
-        http.get(Uri.parse('http://10.0.2.2:8080/dataInsight'),
+        http.get(Uri.parse('${dotenv.env['API_BASE_URL']}/dataInsight'),
             headers: headers),
-        http.get(Uri.parse('http://10.0.2.2:8080/dataPoint'), headers: headers),
-        http.get(Uri.parse('http://10.0.2.2:8080/dataPointYear'),
+        http.get(Uri.parse('${dotenv.env['API_BASE_URL']}/dataPoint'), headers: headers),
+        http.get(Uri.parse('${dotenv.env['API_BASE_URL']}/dataPointYear'),
             headers: headers),
       ];
 
